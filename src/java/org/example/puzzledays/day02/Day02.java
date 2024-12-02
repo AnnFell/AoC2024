@@ -11,62 +11,36 @@ import java.util.stream.IntStream;
 public class Day02 {
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(2, false);
+        List<List<Integer>> entries = input.stream()
+                .map(line -> Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).boxed().toList())
+                .toList();
 
-        partOne(input);
-        partTwo(input);
+        System.out.println("Answer to part one: " + solve(entries, false));
+        System.out.println("Answer to part two: " + solve(entries, true));
     }
 
-    private static void partOne(List<String> input) {
-        long answer = 0;
-        for (String line : input) {
-            List<Integer> split = Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).boxed().toList();
-            boolean allAsc = checker(split, true);
-            boolean allDesc = checker(split, false);
-            if (allAsc || allDesc) {
-                answer++;
-            }
-        }
-        System.out.println("Answer to part one: " + answer);
+    private static long solve(List<List<Integer>> entries, boolean withDampener) {
+        return entries.stream().filter(entry -> checker(entry, true, withDampener) || checker(entry, false, withDampener)).count();
     }
 
-    private static void partTwo(List<String> input) {
-        long answer = 0;
-        for (String line : input) {
-            List<Integer> split = Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).boxed().toList();
-            boolean allAsc = checkerWithDampener(split, true);
-            boolean allDesc = checkerWithDampener(split, false);
-            if (allAsc || allDesc) {
-                answer++;
-            }
-        }
-        System.out.println("Answer to part two: " + answer);
-    }
-
-    private static boolean checkerWithDampener(List<Integer> entry, boolean asc) {
-        for (int i = 0; i < entry.size() - 1; i++) {
-            var difference = Math.abs(entry.get(i) - entry.get(i + 1));
-            boolean compare = asc ? entry.get(i) < entry.get(i + 1) : entry.get(i) > entry.get(i + 1);
-            boolean isSafe = (difference >= 1 && difference <= 3);
-
-            if (!(compare && isSafe)) {
-                List<Integer> withoutCurrent = new ArrayList<>(entry), withoutNext = new ArrayList<>(entry);
-                withoutCurrent.remove(i);
-                if (i < entry.size() - 1) {
-                    withoutNext.remove(i + 1);
-                }
-                return checker(withoutCurrent, asc) || checker(withoutNext, asc);
-            }
-        }
-        return true;
-    }
-
-    private static boolean checker(List<Integer> entry, boolean asc) {
+    private static boolean checker(List<Integer> entry, boolean asc, boolean dampenerOn) {
         return IntStream
                 .range(0, entry.size() - 1)
                 .allMatch(i -> {
                     var difference = Math.abs(entry.get(i) - entry.get(i + 1));
+                    boolean isSafeStep = (difference >= 1 && difference <= 3);
                     boolean compare = asc ? entry.get(i) < entry.get(i + 1) : entry.get(i) > entry.get(i + 1);
-                    return compare && (difference >= 1 && difference <= 3);
+
+                    if (dampenerOn && !(compare && isSafeStep)) {
+                        List<Integer> withoutCurrent = new ArrayList<>(entry), withoutNext = new ArrayList<>(entry);
+                        withoutCurrent.remove(i);
+                        if (i < entry.size() - 1) {
+                            withoutNext.remove(i + 1);
+                        }
+                        return checker(withoutCurrent, asc, false) || checker(withoutNext, asc, false);
+                    }
+
+                    return compare && isSafeStep;
                 });
     }
 }
