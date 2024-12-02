@@ -1,4 +1,4 @@
-package org.example.puzzledays.day01;
+package org.example.puzzledays.day02;
 
 import org.example.utils.FileScanner;
 
