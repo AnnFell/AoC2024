@@ -19,27 +19,39 @@ public class Day03 {
     private static void partOne(List<String> input) {
         long answer = 0;
 
-        String regex = "mul\\(\\d{1,3},\\d{1,3}\\)";
+        String regex = "(mul\\((\\d+),(\\d+)\\))";
         Pattern pattern = Pattern.compile(regex);
-        String regexDigits = "(\\d{1,3}),(\\d{1,3})";
-        Pattern patternDigits = Pattern.compile(regexDigits);
 
         for (String line : input) {
             Matcher matcher = pattern.matcher(line);
             while (matcher.find()) {
-                Matcher matcherDigits = patternDigits.matcher(matcher.group());
-                if (matcherDigits.find()) {
-                    long mul = Long.parseLong(matcherDigits.group(1)) * Long.parseLong(matcherDigits.group(2));
+                    long mul = Long.parseLong(matcher.group(2)) * Long.parseLong(matcher.group(3));
                     answer += mul;
-                }
             }
         }
-
         System.out.println("Answer to part one: " + answer);
     }
 
     private static void partTwo(List<String> input) {
         long answer = 0;
+
+        String regex = "(do\\(\\))|(don't\\(\\))|(mul\\((\\d+),(\\d+)\\))";
+        Pattern pattern = Pattern.compile(regex);
+
+        boolean enable = true;
+        for (String line : input) {
+            Matcher matcher = pattern.matcher(line);
+            while (matcher.find()) {
+                if (matcher.group(1) != null) {
+                    enable = true;
+                } else if (matcher.group(2) != null) {
+                    enable = false;
+                } else if (enable && matcher.group(3) != null) {
+                    long mul = Long.parseLong(matcher.group(4)) * Long.parseLong(matcher.group(5));
+                    answer += mul;
+                }
+            }
+        }
         System.out.println("Answer to part two: " + answer);
     }
 }
