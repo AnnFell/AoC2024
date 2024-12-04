@@ -124,7 +124,7 @@ public class MatrixUtils {
      * @param arrayLength the length og the 1D array
      * @return the index of the neighboring cell in the 1D array representation
      */
-    public static int getNeighborIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction, int arrayLength) {
+    public static int getNeighbourIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction, int arrayLength) {
         if (index % columns == 0) {
             // index is on left edge
             if (direction == NeighbourLocation.LEFT

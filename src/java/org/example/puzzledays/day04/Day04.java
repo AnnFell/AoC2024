@@ -21,7 +21,7 @@ public class Day04 {
         state = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
 
         partOne();
-        partTwo(input);
+        partTwo();
     }
 
     private static void partOne() {
@@ -39,16 +39,37 @@ public class Day04 {
         System.out.println("Answer to part one: " + answer);
     }
 
-    private static void partTwo(List<String> input) {
+    private static void partTwo() {
         long answer = 0;
+        for (int i = 0; i < boardList.size(); i++) {
+            if (boardList.get(i).equals("A")) {
+                if (isXOfMAS(i)) {
+                    answer++;
+                }
+            }
+        }
         System.out.println("Answer to part two: " + answer);
+    }
+
+    private static boolean isXOfMAS(int indexOfA) {
+        try {
+            int topLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.TOP_LEFT, boardList.size());
+            int topRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.TOP_RIGHT, boardList.size());
+            int bottomLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.BOTTOM_LEFT, boardList.size());
+            int bottomRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.BOTTOM_RIGHT, boardList.size());
+            String values = boardList.get(topLeft) + boardList.get(topRight) + boardList.get(bottomLeft) + boardList.get(bottomRight);
+            List<String> correct = List.of("MSMS", "SMSM", "SSMM", "MMSS");
+            return correct.contains(values);
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     private static boolean isXMAS(int indexOfX, NeighbourLocation direction) {
         try {
-            int m = MatrixUtils.getNeighborIndexFromCurrentIndex(indexOfX, columns, direction, boardList.size());
-            int a = MatrixUtils.getNeighborIndexFromCurrentIndex(m, columns, direction, boardList.size());
-            int s = MatrixUtils.getNeighborIndexFromCurrentIndex(a, columns, direction, boardList.size());
+            int m = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfX, columns, direction, boardList.size());
+            int a = MatrixUtils.getNeighbourIndexFromCurrentIndex(m, columns, direction, boardList.size());
+            int s = MatrixUtils.getNeighbourIndexFromCurrentIndex(a, columns, direction, boardList.size());
             boolean isM = boardList.get(m).equals("M");
             boolean isA = boardList.get(a).equals("A");
             boolean isS = boardList.get(s).equals("S");
@@ -72,7 +93,6 @@ public class Day04 {
             } else if (state.get(i).equals(".")) {
                 System.out.print("\033[0;34m" + boardList.get(i) + "\033[0m");
             } else {
-//                                System.out.print("\033[0;31m" + boardList.get(i) + "\033[0m");
                 System.out.print("\033[0;31m" + "." + "\033[0m");
             }
             row++;
@@ -82,5 +102,4 @@ public class Day04 {
             }
         }
     }
-
 }

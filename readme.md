@@ -16,3 +16,7 @@ refactored it anyway. Better!
 Part 1: finally got the hang of capture groups... better late than never. Really quick solve. Part 2: Put the enable
 flag in the wrong place (inside the for loop) so spent a lot of time scratching my head because my answer was too
 high...
+
+**Day 4**
+Part 1: I wrote a really clever util I can re-use. Too bad it had a little bug (no matrix edge detection) that took me
+reeeeeally long to spot. Part 2: super quick, the work paid off. 
