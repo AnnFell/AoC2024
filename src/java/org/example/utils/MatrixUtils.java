@@ -85,19 +85,19 @@ public class MatrixUtils {
         };
     }
 
-    /**
-     * Give back the indexes of the neighbours of a position in a matrix.
-     *
-     * @param x                 x-index of position
-     * @param y                 y-index of position
-     * @param matrixRowCount
-     * @param matrixColumnCount
-     * @return list of [x,y] index of existing neighbours
-     */
-    public static List<int[]> getIndexOfNeighbours(int x, int y, int matrixRowCount, int matrixColumnCount) {
-        List<int[]> result = new ArrayList<>();
-        return result;
-    }
+//    /**
+//     * Give back the indexes of the neighbours of a position in a matrix.
+//     *
+//     * @param x                 x-index of position
+//     * @param y                 y-index of position
+//     * @param matrixRowCount
+//     * @param matrixColumnCount
+//     * @return list of [x,y] index of existing neighbours
+//     */
+//    public static List<int[]> getIndexOfNeighbours(int x, int y, int matrixRowCount, int matrixColumnCount) {
+//        List<int[]> result = new ArrayList<>();
+//        return result;
+//    }
 
     /**
      * Calculates the corresponding coordinate (row and column) in a 2D matrix
@@ -118,12 +118,29 @@ public class MatrixUtils {
      * of a 2D matrix based on a given current index, number of columns,
      * and specified direction using NeighbourLocation.
      *
-     * @param index the current index in the 1D array representation of the matrix
-     * @param columns the number of columns in the matrix
-     * @param direction the direction of the neighbor relative to the current index
+     * @param index       the current index in the 1D array representation of the matrix
+     * @param columns     the number of columns in the matrix
+     * @param direction   the direction of the neighbor relative to the current index
+     * @param arrayLength the length og the 1D array
      * @return the index of the neighboring cell in the 1D array representation
      */
-    public static int getNeighborIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction) {
+    public static int getNeighborIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction, int arrayLength) {
+        if (index % columns == 0) {
+            // index is on left edge
+            if (direction == NeighbourLocation.LEFT
+                    || direction == NeighbourLocation.TOP_LEFT
+                    || direction == NeighbourLocation.BOTTOM_LEFT) {
+                throw new IndexOutOfBoundsException();
+            }
+        }
+        if (index % columns == columns - 1) {
+            // index is on right edge
+            if (direction == NeighbourLocation.RIGHT
+                    || direction == NeighbourLocation.TOP_RIGHT
+                    || direction == NeighbourLocation.BOTTOM_RIGHT) {
+                throw new IndexOutOfBoundsException();
+            }
+        }
         int action = switch (direction) {
             case TOP_LEFT -> (-columns - 1);
             case TOP -> -columns;
@@ -134,7 +151,10 @@ public class MatrixUtils {
             case BOTTOM -> columns;
             case BOTTOM_RIGHT -> columns + 1;
         };
-        return index + action;
+        int result = index + action;
+        if (result < 0) throw new IndexOutOfBoundsException();
+        if (result >= arrayLength) throw new IndexOutOfBoundsException();
+        return result;
     }
 
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 class MatrixUtilsTest {
@@ -84,21 +85,60 @@ class MatrixUtilsTest {
 
     @Test
     void getNeighborIndexFromCurrentIndex() {
-        int topLeft = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP_LEFT);
+        // 00 01 02
+        // 03 04 05
+        // 06 07 08
+        int topLeft = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP_LEFT, 9);
         assertThat(topLeft).isEqualTo(0);
-        int top = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP);
+        int top = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP, 9);
         assertThat(top).isEqualTo(1);
-        int topRight = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP_RIGHT);
+        int topRight = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.TOP_RIGHT, 9);
         assertThat(topRight).isEqualTo(2);
-        int left = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.LEFT);
+        int left = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.LEFT, 9);
         assertThat(left).isEqualTo(3);
-        int right = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.RIGHT);
+        int right = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.RIGHT, 9);
         assertThat(right).isEqualTo(5);
-        int bottomLeft = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM_LEFT);
+        int bottomLeft = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM_LEFT, 9);
         assertThat(bottomLeft).isEqualTo(6);
-        int bottom = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM);
+        int bottom = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM, 9);
         assertThat(bottom).isEqualTo(7);
-        int bottomRight = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM_RIGHT);
+        int bottomRight = MatrixUtils.getNeighborIndexFromCurrentIndex(4, 3, NeighbourLocation.BOTTOM_RIGHT, 9);
         assertThat(bottomRight).isEqualTo(8);
+
+        // Left edge
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(3, 3, NeighbourLocation.TOP_LEFT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(3, 3, NeighbourLocation.LEFT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(3, 3, NeighbourLocation.BOTTOM_LEFT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+
+        // Right edge
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(5, 3, NeighbourLocation.TOP_RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(5, 3, NeighbourLocation.RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(5, 3, NeighbourLocation.BOTTOM_RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+
+        // Top edge
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(0, 3, NeighbourLocation.TOP, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(0, 3, NeighbourLocation.TOP_LEFT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(2, 3, NeighbourLocation.TOP_RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(2, 3, NeighbourLocation.RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+
+        // Bottom edge
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(6, 3, NeighbourLocation.BOTTOM, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(6, 3, NeighbourLocation.BOTTOM_LEFT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(8, 3, NeighbourLocation.BOTTOM_RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> MatrixUtils.getNeighborIndexFromCurrentIndex(8, 3, NeighbourLocation.RIGHT, 9))
+                .isInstanceOf(IndexOutOfBoundsException.class);
     }
 }

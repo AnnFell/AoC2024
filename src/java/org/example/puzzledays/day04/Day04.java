@@ -36,7 +36,6 @@ public class Day04 {
             }
         }
         printBoard();
-//        2620: too high
         System.out.println("Answer to part one: " + answer);
     }
 
@@ -47,9 +46,9 @@ public class Day04 {
 
     private static boolean isXMAS(int indexOfX, NeighbourLocation direction) {
         try {
-            int m = MatrixUtils.getNeighborIndexFromCurrentIndex(indexOfX, columns, direction);
-            int a = MatrixUtils.getNeighborIndexFromCurrentIndex(m, columns, direction);
-            int s = MatrixUtils.getNeighborIndexFromCurrentIndex(a, columns, direction);
+            int m = MatrixUtils.getNeighborIndexFromCurrentIndex(indexOfX, columns, direction, boardList.size());
+            int a = MatrixUtils.getNeighborIndexFromCurrentIndex(m, columns, direction, boardList.size());
+            int s = MatrixUtils.getNeighborIndexFromCurrentIndex(a, columns, direction, boardList.size());
             boolean isM = boardList.get(m).equals("M");
             boolean isA = boardList.get(a).equals("A");
             boolean isS = boardList.get(s).equals("S");
@@ -73,7 +72,7 @@ public class Day04 {
             } else if (state.get(i).equals(".")) {
                 System.out.print("\033[0;34m" + boardList.get(i) + "\033[0m");
             } else {
-                //                System.out.print("\033[0;31m" + boardList.get(i) + "\033[0m");
+//                                System.out.print("\033[0;31m" + boardList.get(i) + "\033[0m");
                 System.out.print("\033[0;31m" + "." + "\033[0m");
             }
             row++;
