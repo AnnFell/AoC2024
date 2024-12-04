@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import org.example.utils.models.Coordinate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +97,44 @@ public class MatrixUtils {
     public static List<int[]> getIndexOfNeighbours(int x, int y, int matrixRowCount, int matrixColumnCount) {
         List<int[]> result = new ArrayList<>();
         return result;
+    }
+
+    /**
+     * Calculates the corresponding coordinate (row and column) in a 2D matrix
+     * from a given array index based on the specified number of rows and columns.
+     *
+     * @param index   the linear index to be converted into a coordinate
+     * @param columns the number of columns in the matrix (firstrow.length())
+     * @return a Coordinate object representing the row and column corresponding to the given index (coordinates are 0 based)
+     */
+    public static Coordinate getCoordinateFromArrayIndex(int index, int columns) {
+        int row = (int) Math.floor((double) index / columns);
+        int column = index % columns;
+        return new Coordinate(row, column);
+    }
+
+    /**
+     * Calculates the index of a neighboring cell in a 1D representation
+     * of a 2D matrix based on a given current index, number of columns,
+     * and specified direction using NeighbourLocation.
+     *
+     * @param index the current index in the 1D array representation of the matrix
+     * @param columns the number of columns in the matrix
+     * @param direction the direction of the neighbor relative to the current index
+     * @return the index of the neighboring cell in the 1D array representation
+     */
+    public static int getNeighborIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction) {
+        int action = switch (direction) {
+            case TOP_LEFT -> (-columns - 1);
+            case TOP -> -columns;
+            case TOP_RIGHT -> (-columns + 1);
+            case LEFT -> -1;
+            case RIGHT -> 1;
+            case BOTTOM_LEFT -> (columns - 1);
+            case BOTTOM -> columns;
+            case BOTTOM_RIGHT -> columns + 1;
+        };
+        return index + action;
     }
 
 }
