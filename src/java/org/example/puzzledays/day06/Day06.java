@@ -49,7 +49,6 @@ public class Day06 {
                 continue;
             }
 
-            System.out.println(obstacleIndex);
             // reset positions
             positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
             // Add obstacle
@@ -62,7 +61,7 @@ public class Day06 {
                 answer++;
             }
         }
-        // 2361 to high
+        // answer to high
         System.out.println("Answer to part two: " + answer);
     }
 
@@ -94,7 +93,7 @@ public class Day06 {
                     if (positions.get(guardPosition).equals("+")) {
                         foundPlusses++;
                         if (foundPlusses > 5) {
-                            System.out.println("is loop!");
+                            System.out.println("Is loop! Obstacle at " + gridList.indexOf("O") );
                             printBoard(guardPosition, gridList);
                             return true;
                         }
