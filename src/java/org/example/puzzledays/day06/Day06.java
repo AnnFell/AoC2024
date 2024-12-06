@@ -23,43 +23,118 @@ public class Day06 {
         positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
 
         partOne();
-        partTwo(input);
+        partTwo();
     }
 
     private static void partOne() {
-        int guardPosition = boardList.indexOf("^");
-        positions.set(guardPosition, "X");
-        NeighbourLocation direction = NeighbourLocation.TOP;
-
-        while (true) {
-            try {
-                int nextIndex = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, direction, boardList.size());
-                if (boardList.get(nextIndex).equals(".") || boardList.get(nextIndex).equals("^")) {
-                    positions.set(nextIndex, "X");
-                    guardPosition = nextIndex;
-                } else {
-                    int newPosition = doTurn(guardPosition, direction);
-                    positions.set(newPosition, "X");
-                    guardPosition = newPosition;
-                    direction = makeARight(direction);
-                }
-//                printBoard(guardPosition);
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Guard has left the grid");
-                break;
-            }
-        }
-
-        long answer = positions.stream().filter(x -> x.equals("X")).count();
+        walkGrid(boardList);
+        long answer = positions.stream().filter(s -> !s.isEmpty()).count();
         System.out.println("Answer to part one: " + answer);
     }
 
-    private static void partTwo(List<String> input) {
+    private static void partTwo() {
+        // Only check positions where guard has been in part one for possible object locations
+        List<Integer> possibleObstacleIndexes = new ArrayList<>();
+        for (int i = 0; i < boardList.size(); i++) {
+            if (!positions.get(i).isEmpty()) {
+                possibleObstacleIndexes.add(i);
+            }
+        }
+        // todo remove below
+//        possibleObstacleIndexes.addAll(List.of(14, 15, 16, 17, 18, 24, 28, 34, 38, 42, 43, 44, 45, 46, 48, 52, 54, 56, 58, 62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 81, 82, 83, 84, 85, 86, 87, 97));
+
         long answer = 0;
+        for (int obstacleIndex : possibleObstacleIndexes) {
+            // Don't add obstacle to start position
+            if (obstacleIndex == boardList.indexOf("^")) {
+                continue;
+            }
+//            System.out.println(obstacleIndex);
+            // reset positions
+            positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
+            // Add obstacle
+            List<String> newBoard = new ArrayList<>(boardList);
+            newBoard.set(obstacleIndex, "O");
+
+            // try the grid walk
+            boolean result = walkGrid(newBoard);
+            if (result) {
+                answer++;
+            }
+        }
+        // 2414 too high
         System.out.println("Answer to part two: " + answer);
     }
 
-    private static NeighbourLocation makeARight(NeighbourLocation direction) {
+    private static boolean walkGrid(List<String> gridList) {
+        int guardPosition = gridList.indexOf("^");
+        positions.set(guardPosition, "^");
+        NeighbourLocation direction = NeighbourLocation.TOP;
+//        printBoard(guardPosition, gridList);
+
+        while (true) {
+            try {
+                int nextIndex = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, direction, gridList.size());
+                if (gridList.get(nextIndex).equals("#") || gridList.get(nextIndex).equals("O")) {
+                    // Obstacle encountered! mark turn
+                    positions.set(guardPosition, "+");
+                    // Take turn and document new position + new direction
+                    int newPosition = doTurn(guardPosition, direction);
+                    guardPosition = newPosition;
+                    direction = getTurnDirection(direction);
+                    // Set new position symbol
+                    String result = getNewPathStatus(positions.get(guardPosition), direction);
+                    positions.set(newPosition, result);
+                } else {
+                    String result = getNewPathStatus(positions.get(nextIndex), direction);
+                    positions.set(nextIndex, result);
+                    guardPosition = nextIndex;
+                }
+//                printBoard(guardPosition, gridList);
+                // check if path status is loop
+                if (positions.get(guardPosition).equals("!")) {
+//                    System.out.println("is loop!");
+//                    printBoard(guardPosition, gridList);
+                    return true;
+                }
+            } catch (IndexOutOfBoundsException e) {
+//                System.out.println("Guard has left the grid");
+//                printBoard(guardPosition, gridList);
+                return false;
+            }
+        }
+    }
+
+    private static String getNewPathStatus(String currentGridSymbol, NeighbourLocation direction) {
+        return switch (currentGridSymbol) {
+            case "":
+            case "^": {
+                if (direction == NeighbourLocation.TOP || direction == NeighbourLocation.BOTTOM) {
+                    yield "|";
+                } else {
+                    yield "-";
+                }
+            }
+            case "|": {
+                if (direction == NeighbourLocation.LEFT || direction == NeighbourLocation.RIGHT) {
+                    yield "+";
+                }
+            }
+            case "-": {
+                if (direction == NeighbourLocation.TOP || direction == NeighbourLocation.BOTTOM) {
+                    yield "+";
+                }
+            }
+            case "+":
+                yield "!";
+            default:
+//                System.out.println(currentGridSymbol);
+//                yield "!";
+                throw new RuntimeException();
+        };
+    }
+
+    private static NeighbourLocation getTurnDirection(NeighbourLocation direction) {
         return switch (direction) {
             case TOP -> NeighbourLocation.RIGHT;
             case LEFT -> NeighbourLocation.TOP;
@@ -70,29 +145,28 @@ public class Day06 {
     }
 
     private static int doTurn(int guardPosition, NeighbourLocation currentDirection) {
-        int projectedPosition = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, makeARight(currentDirection), boardList.size());
+        int projectedPosition = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, getTurnDirection(currentDirection), boardList.size());
         if (!boardList.get(projectedPosition).equals("#")) {
             return projectedPosition;
         } else {
-            System.out.println("Used?");
-            return doTurn(guardPosition, makeARight(currentDirection));
+            return doTurn(guardPosition, getTurnDirection(currentDirection));
         }
     }
 
-    private static void printBoard(int currentPosition) {
-        for (int i = 0; i < boardList.size(); i++) {
+    private static void printBoard(int currentPosition, List<String> board) {
+        for (int i = 0; i < board.size(); i++) {
             if (i % columns == 0) {
                 System.out.println();
+            }
+
+            if (i == currentPosition) {
+                System.out.print("\033[0;31m" + "@" + "\033[0m");
+            } else if (!positions.get(i).isEmpty()) {
+                System.out.print(positions.get(i));
             } else {
-                if (i == currentPosition) {
-                    System.out.print("\033[0;31m" +"O" + "\033[0m");
-                }else if (positions.get(i).equals("X")) {
-                    System.out.print(positions.get(i));
-                } else {
-                    System.out.print("\033[0;34m" +boardList.get(i) + "\033[0m");
-                }
+                System.out.print("\033[0;34m" + board.get(i) + "\033[0m");
             }
         }
-        System.out.println();
+        System.out.println("\n");
     }
 }
