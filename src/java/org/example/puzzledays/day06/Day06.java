@@ -5,15 +5,15 @@ import org.example.utils.MatrixUtils;
 import org.example.utils.NeighbourLocation;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Day06 {
     static List<String> boardList = new ArrayList<>();
     static List<String> positions;
     static int columns = 0;
     static int rows = 0;
+    static Set<Visited> visitedInDirection = new HashSet<>();
+
 
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(6, false);
@@ -51,6 +51,7 @@ public class Day06 {
 
             // reset positions
             positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
+            visitedInDirection.clear();
             // Add obstacle
             List<String> newBoard = new ArrayList<>(boardList);
             newBoard.set(obstacleIndex, "O");
@@ -69,7 +70,6 @@ public class Day06 {
         int guardPosition = gridList.indexOf("^");
         positions.set(guardPosition, "^");
         NeighbourLocation direction = NeighbourLocation.TOP;
-        int foundPlusses = 0;
 
         while (true) {
             try {
@@ -89,16 +89,15 @@ public class Day06 {
                     positions.set(nextIndex, result);
                     guardPosition = nextIndex;
                 }
+
                 if (findLoop) {
-                    if (positions.get(guardPosition).equals("+")) {
-                        foundPlusses++;
-                        if (foundPlusses > 5) {
-                            System.out.println("Is loop! Obstacle at " + gridList.indexOf("O") );
-                            printBoard(guardPosition, gridList);
-                            return true;
-                        }
+                    Visited visited = new Visited(guardPosition, direction);
+                    if (visitedInDirection.contains(visited)) {
+//                        System.out.println("Is loop! Obstacle at " + gridList.indexOf("O"));
+//                        printBoard(guardPosition, gridList);
+                        return true;
                     } else {
-                        foundPlusses = 0;
+                        visitedInDirection.add(visited);
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
