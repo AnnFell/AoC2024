@@ -1,4 +1,4 @@
-package org.example.puzzledays.day04;
+package org.example.puzzledays.day05;
 
 import java.util.ArrayList;
 import java.util.List;

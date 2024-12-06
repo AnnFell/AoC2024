@@ -1,6 +1,5 @@
 package org.example.puzzledays.day05;
 
-import org.example.puzzledays.day04.PageRule;
 import org.example.utils.FileScanner;
 
 import java.io.FileNotFoundException;
