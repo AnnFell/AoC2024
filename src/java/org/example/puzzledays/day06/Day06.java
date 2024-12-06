@@ -11,14 +11,12 @@ public class Day06 {
     static List<String> boardList = new ArrayList<>();
     static List<String> positions;
     static int columns = 0;
-    static int rows = 0;
     static Set<Visited> visitedInDirection = new HashSet<>();
 
 
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(6, false);
         columns = input.get(0).length();
-        rows = input.size();
         input.forEach(line -> boardList.addAll(List.of(line.split(""))));
         positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
 
@@ -77,10 +75,14 @@ public class Day06 {
                 if (gridList.get(nextIndex).equals("#") || gridList.get(nextIndex).equals("O")) {
                     // Obstacle encountered! mark turn
                     positions.set(guardPosition, "+");
-                    // Take turn and document new position + new direction
-                    int newPosition = doTurn(guardPosition, direction);
-                    guardPosition = newPosition;
+                    // Take turn
+                    boolean firstTurnSuccessful = canTurn(guardPosition, direction);
                     direction = getTurnDirection(direction);
+                    if (!firstTurnSuccessful) {
+                        direction = getTurnDirection(direction);
+                    }
+                    int newPosition = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, direction, boardList.size());
+                    guardPosition = newPosition;
                     // Set new position symbol
                     String result = getNewPathStatus(positions.get(guardPosition), direction);
                     positions.set(newPosition, result);
@@ -144,13 +146,9 @@ public class Day06 {
         };
     }
 
-    private static int doTurn(int guardPosition, NeighbourLocation currentDirection) {
+    private static boolean canTurn(int guardPosition, NeighbourLocation currentDirection) {
         int projectedPosition = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, getTurnDirection(currentDirection), boardList.size());
-        if (!boardList.get(projectedPosition).equals("#")) {
-            return projectedPosition;
-        } else {
-            return doTurn(guardPosition, getTurnDirection(currentDirection));
-        }
+        return !boardList.get(projectedPosition).equals("#");
     }
 
     private static void printBoard(int currentPosition, List<String> board) {
