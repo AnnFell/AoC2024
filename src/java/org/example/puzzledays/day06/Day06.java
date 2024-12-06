@@ -27,7 +27,7 @@ public class Day06 {
     }
 
     private static void partOne() {
-        walkGrid(boardList);
+        walkGrid(boardList, false);
         long answer = positions.stream().filter(s -> !s.isEmpty()).count();
         System.out.println("Answer to part one: " + answer);
     }
@@ -40,8 +40,7 @@ public class Day06 {
                 possibleObstacleIndexes.add(i);
             }
         }
-        // todo remove below
-//        possibleObstacleIndexes.addAll(List.of(14, 15, 16, 17, 18, 24, 28, 34, 38, 42, 43, 44, 45, 46, 48, 52, 54, 56, 58, 62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 81, 82, 83, 84, 85, 86, 87, 97));
+        // possibleObstacleIndexes.addAll(List.of(14, 15, 16, 17, 18, 24, 28, 34, 38, 42, 43, 44, 45, 46, 48, 52, 54, 56, 58, 62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 81, 82, 83, 84, 85, 86, 87, 97));
 
         long answer = 0;
         for (int obstacleIndex : possibleObstacleIndexes) {
@@ -49,7 +48,8 @@ public class Day06 {
             if (obstacleIndex == boardList.indexOf("^")) {
                 continue;
             }
-//            System.out.println(obstacleIndex);
+
+            System.out.println(obstacleIndex);
             // reset positions
             positions = new ArrayList<>(Collections.nCopies(boardList.size(), ""));
             // Add obstacle
@@ -57,20 +57,20 @@ public class Day06 {
             newBoard.set(obstacleIndex, "O");
 
             // try the grid walk
-            boolean result = walkGrid(newBoard);
+            boolean result = walkGrid(newBoard, true);
             if (result) {
                 answer++;
             }
         }
-        // 2414 too high
+        // 2361 to high
         System.out.println("Answer to part two: " + answer);
     }
 
-    private static boolean walkGrid(List<String> gridList) {
+    private static boolean walkGrid(List<String> gridList, boolean findLoop) {
         int guardPosition = gridList.indexOf("^");
         positions.set(guardPosition, "^");
         NeighbourLocation direction = NeighbourLocation.TOP;
-//        printBoard(guardPosition, gridList);
+        int foundPlusses = 0;
 
         while (true) {
             try {
@@ -90,16 +90,20 @@ public class Day06 {
                     positions.set(nextIndex, result);
                     guardPosition = nextIndex;
                 }
-//                printBoard(guardPosition, gridList);
-                // check if path status is loop
-                if (positions.get(guardPosition).equals("!")) {
-//                    System.out.println("is loop!");
-//                    printBoard(guardPosition, gridList);
-                    return true;
+                if (findLoop) {
+                    if (positions.get(guardPosition).equals("+")) {
+                        foundPlusses++;
+                        if (foundPlusses > 5) {
+                            System.out.println("is loop!");
+                            printBoard(guardPosition, gridList);
+                            return true;
+                        }
+                    } else {
+                        foundPlusses = 0;
+                    }
                 }
             } catch (IndexOutOfBoundsException e) {
-//                System.out.println("Guard has left the grid");
-//                printBoard(guardPosition, gridList);
+                // Guard has left the grid
                 return false;
             }
         }
@@ -126,10 +130,8 @@ public class Day06 {
                 }
             }
             case "+":
-                yield "!";
+                yield "+";
             default:
-//                System.out.println(currentGridSymbol);
-//                yield "!";
                 throw new RuntimeException();
         };
     }
