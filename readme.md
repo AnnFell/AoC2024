@@ -29,4 +29,5 @@ Part 1: Good challenge, did take quite some time though! Part 2: Hmmm, have yet 
 too many :/
 
 **Day 7**
-Part 1: Another day, another "why the fuck does this not work??? Oh wait it works. WHY???"
+Part 1: Another day, another "why the fuck does this not work??? Oh wait it works. WHY???" Part 2: I guess playing wih
+assembly, binary end hex over the past weeks for my studies paid off.

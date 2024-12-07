@@ -13,11 +13,11 @@ public class Day07 {
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(7, false);
 
-        partOne(input);
-        partTwo(input);
+        solve(input, false);
+        solve(input, true);
     }
 
-    private static void partOne(List<String> input) {
+    private static void solve(List<String> input, boolean useConcat) {
         long answer = 0;
 
         for (String line : input) {
@@ -25,7 +25,7 @@ public class Day07 {
             Long result = numbers.get(0);
             numbers.remove(0);
 
-            boolean possible = isPossibleEquation(result, numbers);
+            boolean possible = isPossibleEquation(result, numbers, useConcat);
             if (possible) {
                 answer += result;
                 System.out.println("\033[0;32m" + line + "\033[0m");
@@ -33,12 +33,11 @@ public class Day07 {
                 System.out.println(line);
             }
         }
-        System.out.println("Answer to part one: " + answer);
-    }
-
-    private static void partTwo(List<String> input) {
-        long answer = 0;
-        System.out.println("Answer to part two: " + answer);
+        if (useConcat) {
+            System.out.println("Answer to part two: " + answer);
+        } else {
+            System.out.println("Answer to part one: " + answer);
+        }
     }
 
     private static List<Long> getNumbers(String line) {
@@ -51,21 +50,29 @@ public class Day07 {
         return numbers;
     }
 
-    public static boolean isPossibleEquation(Long result, List<Long> operands) {
-        List<int[]> possibilities = generateCombinations(operands.size() - 1);
+    public static boolean isPossibleEquation(Long result, List<Long> operands, boolean useConcat) {
+        List<int[]> possibilities;
+        if (useConcat) {
+            possibilities = generateConcatCombinations(operands.size() - 1);
+        } else {
+            possibilities = generateCombinations(operands.size() - 1);
+        }
+
         for (int[] possibility : possibilities) {
             long total = operands.get(0);
             int next = 1;
             for (int operator : possibility) {
                 if (operator == 0) {
                     total += operands.get(next);
-                } else {
+                } else if (operator == 1) {
                     total *= operands.get(next);
+                } else if (operator == 2) {
+                    String concatit = "" + total + operands.get(next);
+                    total = Long.parseLong(concatit);
                 }
                 next++;
             }
             if (total == result) {
-//                System.out.println(Arrays.stream(possibility).mapToObj(String::valueOf).toList());
                 return true;
             }
         }
@@ -79,6 +86,18 @@ public class Day07 {
         for (int i = 0; i < combinations; i++) {
             String binary = String.format("%" + numberOfOperators + "s", Integer.toBinaryString(i)).replace(' ', '0');
             int[] operators = Arrays.stream(binary.split("")).toList().stream().mapToInt(Integer::parseInt).toArray();
+            list.add(operators);
+        }
+        return list;
+    }
+
+    public static List<int[]> generateConcatCombinations(int numberOfOperators) {
+        int combinations = (int) Math.pow(3, numberOfOperators);
+        List<int[]> list = new ArrayList<>();
+        // loop over every possible combination of 0 (is add) and 1 (is multiply) and 2 (is ||) for numberOfOperators
+        for (int i = 0; i < combinations; i++) {
+            String base3 = String.format("%" + numberOfOperators + "s", Integer.toString(i, 3)).replace(' ', '0');
+            int[] operators = Arrays.stream(base3.split("")).toList().stream().mapToInt(Integer::parseInt).toArray();
             list.add(operators);
         }
         return list;
