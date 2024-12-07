@@ -21,9 +21,12 @@ high...
 Part 1: I wrote a really clever util I can re-use. Too bad it had a little bug (no matrix edge detection) that took me
 reeeeeally long to spot. Part 2: super quick, the work paid off.
 
-**Day05**
+**Day 5**
 Part 1 and 2: not much to say, pretty straightforward
 
-**Day 06**
+**Day 6**
 Part 1: Good challenge, did take quite some time though! Part 2: Hmmm, have yet to figure this one out. I got loops, but
 too many :/
+
+**Day 7**
+Part 1: Another day, another "why the fuck does this not work??? Oh wait it works. WHY???"
