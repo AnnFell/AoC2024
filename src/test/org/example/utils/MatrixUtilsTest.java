@@ -59,28 +59,28 @@ class MatrixUtilsTest {
         assertThat(x00).isEqualTo(new Coordinate(0, 0));
 
         Coordinate x01 = MatrixUtils.getCoordinateFromArrayIndex(1, 3);
-        assertThat(x01).isEqualTo(new Coordinate(0, 1));
+        assertThat(x01).isEqualTo(new Coordinate(1, 0));
 
         Coordinate x02 = MatrixUtils.getCoordinateFromArrayIndex(2, 3);
-        assertThat(x02).isEqualTo(new Coordinate(0, 2));
+        assertThat(x02).isEqualTo(new Coordinate(2, 0));
 
         Coordinate x10 = MatrixUtils.getCoordinateFromArrayIndex(3, 3);
-        assertThat(x10).isEqualTo(new Coordinate(1, 0));
+        assertThat(x10).isEqualTo(new Coordinate(0, 1));
 
         Coordinate x11 = MatrixUtils.getCoordinateFromArrayIndex(4, 3);
         assertThat(x11).isEqualTo(new Coordinate(1, 1));
 
         Coordinate x12 = MatrixUtils.getCoordinateFromArrayIndex(5, 3);
-        assertThat(x12).isEqualTo(new Coordinate(1, 2));
+        assertThat(x12).isEqualTo(new Coordinate(2, 1));
 
         Coordinate x30 = MatrixUtils.getCoordinateFromArrayIndex(9, 3);
-        assertThat(x30).isEqualTo(new Coordinate(3, 0));
+        assertThat(x30).isEqualTo(new Coordinate(0, 3));
 
         Coordinate x31 = MatrixUtils.getCoordinateFromArrayIndex(10, 3);
-        assertThat(x31).isEqualTo(new Coordinate(3, 1));
+        assertThat(x31).isEqualTo(new Coordinate(1, 3));
 
         Coordinate x32 = MatrixUtils.getCoordinateFromArrayIndex(11, 3);
-        assertThat(x32).isEqualTo(new Coordinate(3, 2));
+        assertThat(x32).isEqualTo(new Coordinate(2, 3));
     }
 
     @Test

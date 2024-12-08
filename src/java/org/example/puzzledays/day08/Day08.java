@@ -80,12 +80,12 @@ public class Day08 {
     public static void markAntiNodesWithResonanceForIndexes(int first, int second, boolean useResonance) {
         Coordinate firstA = MatrixUtils.getCoordinateFromArrayIndex(first, columns);
         Coordinate secondA = MatrixUtils.getCoordinateFromArrayIndex(second, columns);
-        int dX = firstA.column() - secondA.column();
-        int dY = firstA.row() - secondA.row();
+        int dX = firstA.columnX() - secondA.columnX();
+        int dY = firstA.rowY() - secondA.rowY();
 
         boolean outOfFirstBounds = false;
-        int newUpperY = firstA.row();
-        int newUpperX = firstA.column();
+        int newUpperY = firstA.rowY();
+        int newUpperX = firstA.columnX();
         while (!outOfFirstBounds) {
             newUpperY = newUpperY + dY;
             newUpperX = newUpperX + dX;
@@ -99,8 +99,8 @@ public class Day08 {
         }
 
         boolean outOfSecondBounds = false;
-        int newLowerY = secondA.row();
-        int newLowerX = secondA.column();
+        int newLowerY = secondA.rowY();
+        int newLowerX = secondA.columnX();
         while (!outOfSecondBounds) {
             newLowerY = newLowerY - dY;
             newLowerX = newLowerX - dX;

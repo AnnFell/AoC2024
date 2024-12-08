@@ -109,7 +109,7 @@ public class MatrixUtils {
     public static Coordinate getCoordinateFromArrayIndex(int index, int columns) {
         int row = (int) Math.floor((double) index / columns);
         int column = index % columns;
-        return new Coordinate(row, column);
+        return new Coordinate(column, row);
     }
 
     /**
