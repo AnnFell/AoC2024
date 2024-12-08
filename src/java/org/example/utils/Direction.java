@@ -1,6 +1,6 @@
 package org.example.utils;
 
-public enum NeighbourLocation {
+public enum Direction {
     TOP_LEFT,
     TOP,
     TOP_RIGHT,

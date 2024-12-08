@@ -2,7 +2,7 @@ package org.example.puzzledays.day04;
 
 import org.example.utils.FileScanner;
 import org.example.utils.MatrixUtils;
-import org.example.utils.NeighbourLocation;
+import org.example.utils.Direction;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Day04 {
         long answer = 0;
         for (int i = 0; i < boardList.size(); i++) {
             if (boardList.get(i).equals("X")) {
-                for (NeighbourLocation direction : NeighbourLocation.values()) {
+                for (Direction direction : Direction.values()) {
                     if (isXMAS(i, direction)) {
                         answer++;
                     }
@@ -53,10 +53,10 @@ public class Day04 {
 
     private static boolean isXOfMAS(int indexOfA) {
         try {
-            int topLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.TOP_LEFT, boardList.size());
-            int topRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.TOP_RIGHT, boardList.size());
-            int bottomLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.BOTTOM_LEFT, boardList.size());
-            int bottomRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, NeighbourLocation.BOTTOM_RIGHT, boardList.size());
+            int topLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, Direction.TOP_LEFT, boardList.size());
+            int topRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, Direction.TOP_RIGHT, boardList.size());
+            int bottomLeft = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, Direction.BOTTOM_LEFT, boardList.size());
+            int bottomRight = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfA, columns, Direction.BOTTOM_RIGHT, boardList.size());
             String values = boardList.get(topLeft) + boardList.get(topRight) + boardList.get(bottomLeft) + boardList.get(bottomRight);
             List<String> correct = List.of("MSMS", "SMSM", "SSMM", "MMSS");
             return correct.contains(values);
@@ -65,7 +65,7 @@ public class Day04 {
         }
     }
 
-    private static boolean isXMAS(int indexOfX, NeighbourLocation direction) {
+    private static boolean isXMAS(int indexOfX, Direction direction) {
         try {
             int m = MatrixUtils.getNeighbourIndexFromCurrentIndex(indexOfX, columns, direction, boardList.size());
             int a = MatrixUtils.getNeighbourIndexFromCurrentIndex(m, columns, direction, boardList.size());

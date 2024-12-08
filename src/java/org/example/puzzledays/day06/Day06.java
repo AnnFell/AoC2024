@@ -2,7 +2,7 @@ package org.example.puzzledays.day06;
 
 import org.example.utils.FileScanner;
 import org.example.utils.MatrixUtils;
-import org.example.utils.NeighbourLocation;
+import org.example.utils.Direction;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -67,7 +67,7 @@ public class Day06 {
     private static boolean walkGrid(List<String> gridList, boolean findLoop) {
         int guardPosition = gridList.indexOf("^");
         positions.set(guardPosition, "^");
-        NeighbourLocation direction = NeighbourLocation.TOP;
+        Direction direction = Direction.TOP;
 
         while (true) {
             try {
@@ -109,23 +109,23 @@ public class Day06 {
         }
     }
 
-    private static String getNewPathStatus(String currentGridSymbol, NeighbourLocation direction) {
+    private static String getNewPathStatus(String currentGridSymbol, Direction direction) {
         return switch (currentGridSymbol) {
             case "":
             case "^": {
-                if (direction == NeighbourLocation.TOP || direction == NeighbourLocation.BOTTOM) {
+                if (direction == Direction.TOP || direction == Direction.BOTTOM) {
                     yield "|";
                 } else {
                     yield "-";
                 }
             }
             case "|": {
-                if (direction == NeighbourLocation.LEFT || direction == NeighbourLocation.RIGHT) {
+                if (direction == Direction.LEFT || direction == Direction.RIGHT) {
                     yield "+";
                 }
             }
             case "-": {
-                if (direction == NeighbourLocation.TOP || direction == NeighbourLocation.BOTTOM) {
+                if (direction == Direction.TOP || direction == Direction.BOTTOM) {
                     yield "+";
                 }
             }
@@ -136,17 +136,17 @@ public class Day06 {
         };
     }
 
-    private static NeighbourLocation getTurnDirection(NeighbourLocation direction) {
+    private static Direction getTurnDirection(Direction direction) {
         return switch (direction) {
-            case TOP -> NeighbourLocation.RIGHT;
-            case LEFT -> NeighbourLocation.TOP;
-            case BOTTOM -> NeighbourLocation.LEFT;
-            case RIGHT -> NeighbourLocation.BOTTOM;
+            case TOP -> Direction.RIGHT;
+            case LEFT -> Direction.TOP;
+            case BOTTOM -> Direction.LEFT;
+            case RIGHT -> Direction.BOTTOM;
             default -> throw new RuntimeException();
         };
     }
 
-    private static boolean canTurn(int guardPosition, NeighbourLocation currentDirection) {
+    private static boolean canTurn(int guardPosition, Direction currentDirection) {
         int projectedPosition = MatrixUtils.getNeighbourIndexFromCurrentIndex(guardPosition, columns, getTurnDirection(currentDirection), boardList.size());
         return !boardList.get(projectedPosition).equals("#");
     }

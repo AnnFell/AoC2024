@@ -20,14 +20,14 @@ public class MatrixUtils {
     public static <T> List<T> getAllNeighbours(int x, int y, List<List<T>> matrix) {
         List<T> result = new ArrayList<>(8);
 
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.TOP_LEFT));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.TOP));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.TOP_RIGHT));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.LEFT));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.RIGHT));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.BOTTOM_LEFT));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.BOTTOM));
-        result.add(getNeighbour(x, y, matrix, NeighbourLocation.BOTTOM_RIGHT));
+        result.add(getNeighbour(x, y, matrix, Direction.TOP_LEFT));
+        result.add(getNeighbour(x, y, matrix, Direction.TOP));
+        result.add(getNeighbour(x, y, matrix, Direction.TOP_RIGHT));
+        result.add(getNeighbour(x, y, matrix, Direction.LEFT));
+        result.add(getNeighbour(x, y, matrix, Direction.RIGHT));
+        result.add(getNeighbour(x, y, matrix, Direction.BOTTOM_LEFT));
+        result.add(getNeighbour(x, y, matrix, Direction.BOTTOM));
+        result.add(getNeighbour(x, y, matrix, Direction.BOTTOM_RIGHT));
 
         return result;
     }
@@ -39,16 +39,16 @@ public class MatrixUtils {
      * @param x                 the x-coordinate (column index) of the element in the matrix
      * @param y                 the y-coordinate (row index) of the element in the matrix
      * @param matrix            the 2D matrix from which the neighbor is to be retrieved
-     * @param neighbourLocation the direction from the specified position to the neighboring element
+     * @param direction the direction from the specified position to the neighboring element
      * @param <T>               the type of elements stored in the matrix
      * @return the neighboring element located in the specified direction from the given position,
      *         or null if the neighbor is out of the matrix bounds
      */
-    public static <T> T getNeighbour(int x, int y, List<List<T>> matrix, NeighbourLocation neighbourLocation) {
+    public static <T> T getNeighbour(int x, int y, List<List<T>> matrix, Direction direction) {
         int maxY = matrix.size() - 1;
         int maxX = matrix.get(0).size() - 1;
 
-        return switch (neighbourLocation) {
+        return switch (direction) {
             case TOP_LEFT -> {
                 if (x - 1 < 0 || y - 1 < 0) yield null;
                 yield matrix.get(y - 1).get(x - 1);
@@ -141,20 +141,20 @@ public class MatrixUtils {
      * @param arrayLength the length og the 1D array
      * @return the index of the neighboring cell in the 1D array representation
      */
-    public static int getNeighbourIndexFromCurrentIndex(int index, int columns, NeighbourLocation direction, int arrayLength) {
+    public static int getNeighbourIndexFromCurrentIndex(int index, int columns, Direction direction, int arrayLength) {
         if (index % columns == 0) {
             // index is on left edge
-            if (direction == NeighbourLocation.LEFT
-                    || direction == NeighbourLocation.TOP_LEFT
-                    || direction == NeighbourLocation.BOTTOM_LEFT) {
+            if (direction == Direction.LEFT
+                    || direction == Direction.TOP_LEFT
+                    || direction == Direction.BOTTOM_LEFT) {
                 throw new IndexOutOfBoundsException();
             }
         }
         if (index % columns == columns - 1) {
             // index is on right edge
-            if (direction == NeighbourLocation.RIGHT
-                    || direction == NeighbourLocation.TOP_RIGHT
-                    || direction == NeighbourLocation.BOTTOM_RIGHT) {
+            if (direction == Direction.RIGHT
+                    || direction == Direction.TOP_RIGHT
+                    || direction == Direction.BOTTOM_RIGHT) {
                 throw new IndexOutOfBoundsException();
             }
         }

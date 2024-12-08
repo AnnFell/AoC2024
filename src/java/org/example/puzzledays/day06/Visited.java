@@ -1,6 +1,6 @@
 package org.example.puzzledays.day06;
 
-import org.example.utils.NeighbourLocation;
+import org.example.utils.Direction;
 
-public record Visited(int index, NeighbourLocation direction) {
+public record Visited(int index, Direction direction) {
 }
