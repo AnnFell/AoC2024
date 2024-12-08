@@ -15,10 +15,12 @@ public class Day08 {
     static List<String> map;
     static List<String> antiNodeMap;
     static int columns;
+    static int rows;
 
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<String> input = FileScanner.getPuzzleInput(8, true);
+        ArrayList<String> input = FileScanner.getPuzzleInput(8, false);
         columns = input.get(0).length();
+        rows = input.size();
         map = input.stream().map(line -> List.of(line.split(""))).flatMap(List::stream).toList();
         antiNodeMap = map.stream().map(s -> "").collect(Collectors.toCollection(ArrayList::new));
 
@@ -42,12 +44,12 @@ public class Day08 {
                 occurrences.computeIfAbsent(map.get(i), k -> new ArrayList<>()).add(i);
             }
         }
-        System.out.println(occurrences);
+//        System.out.println(occurrences);
 
         for (Map.Entry<String, List<Integer>> entry : occurrences.entrySet()) {
             List<Integer> antennaIndex = entry.getValue();
             List<Integer> result = findAntiNodes(antennaIndex);
-            printMap(result, map.get(antennaIndex.get(0)));
+//            printMap(result, map.get(antennaIndex.get(0)));
         }
         printMap(null, "");
 
@@ -90,22 +92,22 @@ public class Day08 {
 
         int firstY = firstA.row() + dY;
         int firstX = firstA.column() + dX;
-        if (firstY < map.size() && firstX < columns) {
-            int index = (columns * firstY) + firstX;
-            if (index > -1 && index < map.size()) {
-                antiNodeMap.set(index, "#");
-                antinodes.add(index);
-            }
+        try {
+            int index = MatrixUtils.getArrayIndexFromCoordinate(firstX, firstY, columns, rows);
+            antiNodeMap.set(index, "#");
+            antinodes.add(index);
+        } catch (IndexOutOfBoundsException e) {
         }
+
         int secondY = secondA.row() - dY;
         int secondX = secondA.column() - dX;
-        if (secondY < map.size() && secondX < columns) {
-            int index = (columns * secondY) + secondX;
-            if (index > -1 && index < map.size()) {
-                antiNodeMap.set(index, "#");
-                antinodes.add(index);
-            }
+        try {
+            int index = MatrixUtils.getArrayIndexFromCoordinate(secondX, secondY, columns, rows);
+            antiNodeMap.set(index, "#");
+            antinodes.add(index);
+        } catch (IndexOutOfBoundsException e) {
         }
+
         return antinodes;
     }
 

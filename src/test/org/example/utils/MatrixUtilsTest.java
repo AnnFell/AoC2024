@@ -141,4 +141,48 @@ class MatrixUtilsTest {
         assertThatThrownBy(() -> MatrixUtils.getNeighbourIndexFromCurrentIndex(8, 3, NeighbourLocation.RIGHT, 9))
                 .isInstanceOf(IndexOutOfBoundsException.class);
     }
+
+
+    @Test
+    void getArrayIndexFromCoordinateBasic() {
+        int index = MatrixUtils.getArrayIndexFromCoordinate(1, 2, 3, 3);
+        assertThat(index).isEqualTo(7);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWithFirstXRow() {
+        int index = MatrixUtils.getArrayIndexFromCoordinate(0, 2, 3, 3);
+        assertThat(index).isEqualTo(6);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWithFirstYRow() {
+        int index = MatrixUtils.getArrayIndexFromCoordinate(2, 0, 3, 3);
+        assertThat(index).isEqualTo(2);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWhenXIsBiggerThanColumns() {
+        assertThatThrownBy(() -> MatrixUtils.getArrayIndexFromCoordinate(3, 0, 3, 3))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWhenYIsBiggerThanRows() {
+        assertThatThrownBy(() -> MatrixUtils.getArrayIndexFromCoordinate(2, 3, 3, 3))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWhenXIsNegative() {
+        assertThatThrownBy(() -> MatrixUtils.getArrayIndexFromCoordinate(-1, 1, 3, 3))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getArrayIndexFromCoordinateWhenYIsNegative() {
+        assertThatThrownBy(() -> MatrixUtils.getArrayIndexFromCoordinate(1, -1, 3, 3))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
 }

@@ -8,17 +8,14 @@ import java.util.List;
 public class MatrixUtils {
 
     /**
-     * Give back values of all neighbours of a position in a matrix.
+     * Retrieves all neighboring elements around a specified position in a 2D matrix.
      *
-     * @param x      x-index of position
-     * @param y      y-index of position
-     * @param matrix
-     * @param <T>
-     * @return values of neighbours as a list, index corresponds to these positions:
-     * | 0 | 1 | 2 |
-     * | 3 | X | 4 |
-     * | 5 | 6 | 7 |
-     * Value of neighbour is null when neighbour does not exist.
+     * @param x      the x-coordinate (column index) of the element in the matrix
+     * @param y      the y-coordinate (row index) of the element in the matrix
+     * @param matrix the 2D matrix from which neighbors are to be retrieved
+     * @param <T>    the type of elements stored in the matrix
+     * @return a list containing the neighboring elements of the specified position;
+     *         elements that fall outside the matrix bounds will be stored as null
      */
     public static <T> List<T> getAllNeighbours(int x, int y, List<List<T>> matrix) {
         List<T> result = new ArrayList<>(8);
@@ -36,14 +33,16 @@ public class MatrixUtils {
     }
 
     /**
-     * Give back a neighbour of a position in a matrix.
+     * Retrieves a neighboring element from a 2D matrix based on a specified direction
+     * from a given position. If the neighboring position is out of bounds, it returns null.
      *
-     * @param x                 x-index of position
-     * @param y                 y-index of position
-     * @param matrix
-     * @param neighbourLocation top-left, top, top-right, left, right, bottom-left, bottom, bottom-right
-     * @param <T>
-     * @return
+     * @param x                 the x-coordinate (column index) of the element in the matrix
+     * @param y                 the y-coordinate (row index) of the element in the matrix
+     * @param matrix            the 2D matrix from which the neighbor is to be retrieved
+     * @param neighbourLocation the direction from the specified position to the neighboring element
+     * @param <T>               the type of elements stored in the matrix
+     * @return the neighboring element located in the specified direction from the given position,
+     *         or null if the neighbor is out of the matrix bounds
      */
     public static <T> T getNeighbour(int x, int y, List<List<T>> matrix, NeighbourLocation neighbourLocation) {
         int maxY = matrix.size() - 1;
@@ -111,6 +110,24 @@ public class MatrixUtils {
         int row = (int) Math.floor((double) index / columns);
         int column = index % columns;
         return new Coordinate(row, column);
+    }
+
+    /**
+     * Calculates the index of an element in a 1D array representation of a 2D matrix
+     * given its coordinates in the matrix.
+     *
+     * @param x       the x-coordinate (column index) of the element in the matrix
+     * @param y       the y-coordinate (row index) of the element in the matrix
+     * @param columns the number of columns in the matrix
+     * @param rows    the number of rows in the matrix
+     * @return the index of the element in the 1D array
+     * @throws IndexOutOfBoundsException if the coordinates are out of the matrix bounds
+     */
+    public static int getArrayIndexFromCoordinate(int x, int y, int columns, int rows) {
+        if (x < 0 || y < 0 || x > columns - 1 || y > rows - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        return (y * columns) + x;
     }
 
     /**
