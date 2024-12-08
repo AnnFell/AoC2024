@@ -32,6 +32,6 @@ too many :/
 Part 1: Another day, another "why the fuck does this not work??? Oh wait it works. WHY???" Part 2: I guess playing wih
 assembly, binary end hex over the past weeks for my studies paid off.
 
-**Day 8**
+**Day 8 - solved**
 Part 1: Another "why does it work on the test input but not on the puzzle". ~~Out of time for today, maybe tonight.~~
-Couldn't leave it alone and a properly unit tested until function saves (half) the puzzle day.
+Couldn't leave it alone and a properly unit tested until function saves (half) the puzzle day. Part 2: done I guess

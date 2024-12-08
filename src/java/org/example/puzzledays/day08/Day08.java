@@ -19,39 +19,33 @@ public class Day08 {
 
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(8, false);
+        parseData(input);
+        partOne();
+
+        // parse data again = lazy reset
+        parseData(input);
+        partTwo();
+    }
+
+    private static void parseData(List<String> input) {
         columns = input.get(0).length();
         rows = input.size();
         map = input.stream().map(line -> List.of(line.split(""))).flatMap(List::stream).toList();
         antiNodeMap = map.stream().map(s -> "").collect(Collectors.toCollection(ArrayList::new));
-
-        // Antenna: have frequency (== character other than .)
-        // They have anti-nodes, a point that is:
-        // // 2 antennas of same frequency
-        // // in line with the two antenna's
-        // // equally spaced with the two antennas
-
-        partOne();
-        partTwo(input);
     }
 
     private static void partOne() {
-//        Map<String, Long> test = map.stream().collect(Collectors.groupingBy(s -> s, Collectors.counting()));
-//        System.out.println(test);
-
         Map<String, List<Integer>> occurrences = new HashMap<>();
         for (int i = 0; i < map.size(); i++) {
             if (!map.get(i).equals(".")) {
                 occurrences.computeIfAbsent(map.get(i), k -> new ArrayList<>()).add(i);
             }
         }
-//        System.out.println(occurrences);
-
         for (Map.Entry<String, List<Integer>> entry : occurrences.entrySet()) {
             List<Integer> antennaIndex = entry.getValue();
-            List<Integer> result = findAntiNodes(antennaIndex);
-//            printMap(result, map.get(antennaIndex.get(0)));
+            findAntiNodes(antennaIndex, false);
         }
-        printMap(null, "");
+        printMap();
 
         long answer = 0L;
         for (String s : antiNodeMap) {
@@ -62,56 +56,77 @@ public class Day08 {
         System.out.println("Answer to part one: " + answer);
     }
 
-    private static void partTwo(List<String> input) {
-        long answer = 0;
+    private static void partTwo() {
+        Map<String, List<Integer>> occurrences = new HashMap<>();
+        for (int i = 0; i < map.size(); i++) {
+            if (!map.get(i).equals(".")) {
+                occurrences.computeIfAbsent(map.get(i), k -> new ArrayList<>()).add(i);
+            }
+        }
+        for (Map.Entry<String, List<Integer>> entry : occurrences.entrySet()) {
+            List<Integer> antennaIndex = entry.getValue();
+            findAntiNodes(antennaIndex, true);
+        }
+        printMap();
+        long answer = 0L;
+        for (int i = 0; i < antiNodeMap.size(); i++) {
+            if (antiNodeMap.get(i).equals("#") || !map.get(i).equals(".")) {
+                answer++;
+            }
+        }
         System.out.println("Answer to part two: " + answer);
     }
 
-    public static List<Integer> findAntiNodes(List<Integer> antennaIndex) {
-        List<Integer> check = new ArrayList<>();
-
-        // hacky, sorry, for each frequency only 3 or 4 antennas
-        for (int i = 1; i < antennaIndex.size(); i++) {
-            check.addAll(markAntiNodesForIndexes(antennaIndex.get(0), antennaIndex.get(i)));
-        }
-        check.addAll(markAntiNodesForIndexes(antennaIndex.get(1), antennaIndex.get(2)));
-        if (antennaIndex.size() == 4) {
-            check.addAll(markAntiNodesForIndexes(antennaIndex.get(1), antennaIndex.get(3)));
-            check.addAll(markAntiNodesForIndexes(antennaIndex.get(2), antennaIndex.get(3)));
-        }
-        return check;
-    }
-
-    public static List<Integer> markAntiNodesForIndexes(int first, int second) {
-        List<Integer> antinodes = new ArrayList<>();
-
+    public static void markAntiNodesWithResonanceForIndexes(int first, int second, boolean useResonance) {
         Coordinate firstA = MatrixUtils.getCoordinateFromArrayIndex(first, columns);
         Coordinate secondA = MatrixUtils.getCoordinateFromArrayIndex(second, columns);
         int dX = firstA.column() - secondA.column();
         int dY = firstA.row() - secondA.row();
 
-        int firstY = firstA.row() + dY;
-        int firstX = firstA.column() + dX;
-        try {
-            int index = MatrixUtils.getArrayIndexFromCoordinate(firstX, firstY, columns, rows);
-            antiNodeMap.set(index, "#");
-            antinodes.add(index);
-        } catch (IndexOutOfBoundsException e) {
+        boolean outOfFirstBounds = false;
+        int newUpperY = firstA.row();
+        int newUpperX = firstA.column();
+        while (!outOfFirstBounds) {
+            newUpperY = newUpperY + dY;
+            newUpperX = newUpperX + dX;
+            try {
+                int index = MatrixUtils.getArrayIndexFromCoordinate(newUpperX, newUpperY, columns, rows);
+                antiNodeMap.set(index, "#");
+            } catch (IndexOutOfBoundsException e) {
+                outOfFirstBounds = true;
+            }
+            if (!useResonance) break;
         }
 
-        int secondY = secondA.row() - dY;
-        int secondX = secondA.column() - dX;
-        try {
-            int index = MatrixUtils.getArrayIndexFromCoordinate(secondX, secondY, columns, rows);
-            antiNodeMap.set(index, "#");
-            antinodes.add(index);
-        } catch (IndexOutOfBoundsException e) {
+        boolean outOfSecondBounds = false;
+        int newLowerY = secondA.row();
+        int newLowerX = secondA.column();
+        while (!outOfSecondBounds) {
+            newLowerY = newLowerY - dY;
+            newLowerX = newLowerX - dX;
+            try {
+                int index = MatrixUtils.getArrayIndexFromCoordinate(newLowerX, newLowerY, columns, rows);
+                antiNodeMap.set(index, "#");
+            } catch (IndexOutOfBoundsException e) {
+                outOfSecondBounds = true;
+            }
+            if (!useResonance) break;
         }
-
-        return antinodes;
     }
 
-    private static void printMap(List<Integer> antinodes, String currentFrequency) {
+    public static void findAntiNodes(List<Integer> antennaIndex, boolean useResonance) {
+        // hacky, sorry, for each frequency only 3 or 4 antennas so this covers every pair
+        for (int i = 1; i < antennaIndex.size(); i++) {
+            markAntiNodesWithResonanceForIndexes(antennaIndex.get(0), antennaIndex.get(i), useResonance);
+        }
+        markAntiNodesWithResonanceForIndexes(antennaIndex.get(1), antennaIndex.get(2), useResonance);
+        if (antennaIndex.size() == 4) {
+            markAntiNodesWithResonanceForIndexes(antennaIndex.get(1), antennaIndex.get(3), useResonance);
+            markAntiNodesWithResonanceForIndexes(antennaIndex.get(2), antennaIndex.get(3), useResonance);
+        }
+    }
+
+    private static void printMap() {
         for (int i = 0; i < map.size(); i++) {
             if (i % columns == 0) {
                 System.out.println();
@@ -119,25 +134,15 @@ public class Day08 {
 
             String antinode = antiNodeMap.get(i);
             String point = map.get(i);
-            if (antinodes != null) {
-                if (point.equals(".") && antinodes.contains(i)) {
-                    System.out.print("\033[0;32m" + "#" + "\033[0m");
-                } else if (point.equals(currentFrequency)) {
-                    System.out.print("\033[0;31m" + point + "\033[0m");
-                } else if (antinodes.contains(i)) {
-                    System.out.print("\033[0;34m" + point + "\033[0m");
-                } else {
-                    System.out.print(point);
-                }
+
+            if (point.equals(".") && !antinode.isEmpty()) {
+                System.out.print("\033[0;32m" + antinode + "\033[0m");
+            } else if (!antinode.isEmpty()) {
+                System.out.print("\033[0;34m" + point + "\033[0m");
             } else {
-                if (point.equals(".") && !antinode.isEmpty()) {
-                    System.out.print("\033[0;32m" + antinode + "\033[0m");
-                } else if (!antinode.isEmpty()) {
-                    System.out.print("\033[0;34m" + point + "\033[0m");
-                } else {
-                    System.out.print(point);
-                }
+                System.out.print(point);
             }
+
         }
         System.out.println("\n");
     }
