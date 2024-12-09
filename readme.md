@@ -35,3 +35,7 @@ assembly, binary end hex over the past weeks for my studies paid off.
 **Day 8 - solved**
 Part 1: Another "why does it work on the test input but not on the puzzle". ~~Out of time for today, maybe tonight.~~
 Couldn't leave it alone and a properly unit tested until function saves (half) the puzzle day. Part 2: done I guess
+
+**Day 9**
+Part 1: I thought I had a pretty nice and fast solution. But no luck, test input is correct, but no star. Getting into
+the real timecrunch here! Must be nice solving each day in an hour or two max

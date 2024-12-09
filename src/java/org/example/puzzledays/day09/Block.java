@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Block implements Comparable<Block> {
-    //    private int freeSpace;
-    private int capacity;
-    private int startIndex;
+    private final int capacity;
+    private final int startIndex;
     private boolean isDefragged = false;
     private boolean isBeingDefragmented = false;
     private List<Integer> content = new ArrayList<>();
@@ -65,12 +64,11 @@ public class Block implements Comparable<Block> {
         }
         long result = 0;
         long index = startIndex;
-        for (int i = 0; i < content.size(); i++) {
-            long calc = index * content.get(i);
-//            System.out.println("" + index + " * " + content.get(i) + "=" + calc);
+        for (Integer integer : content) {
+            long calc = index * integer;
             result += calc;
-            startIndex++;
             index++;
+//            System.out.println(index + " * " + content.get(i) + " = " + calc);
         }
         return result;
     }
