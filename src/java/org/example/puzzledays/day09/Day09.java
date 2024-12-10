@@ -15,29 +15,25 @@ public class Day09 {
 
     private void partOne(List<String> input) {
         int index = 0;
-        int contentDigit = 0;
+        int fillerDigit = 0;
         List<Block> memory = new ArrayList<>();
 
         for (int i = 0; i < input.size(); i++) {
-            // put filled block
             int digit = Integer.parseInt(input.get(i));
-            if (digit > 0) {
-                List<Integer> content = new ArrayList<>(Collections.nCopies(digit, contentDigit));
-                memory.add(new Block(index, digit, content));
+
+            if (i % 2 == 0) {  // put filled block
+                if (digit > 0) {
+                    List<Integer> content = new ArrayList<>(Collections.nCopies(digit, fillerDigit));
+                    memory.add(new Block(index, digit, content));
+                }
+                fillerDigit++;
+
+            } else { // put empty block
+                if (digit > 0) {
+                    memory.add(new Block(index, digit, null));
+                }
             }
-            contentDigit++;
             index += digit == 0 ? 1 : digit;
-
-            if (i == input.size() - 1) break;
-
-            // put empty block
-            i++;
-            int nextDigit = Integer.parseInt(input.get(i));
-            if (nextDigit > 0) {
-                memory.add(new Block(index, nextDigit, null));
-            }
-            index += nextDigit == 0 ? 1 : nextDigit;
-            if (i == input.size()) break;
         }
 
         fragment(memory);
