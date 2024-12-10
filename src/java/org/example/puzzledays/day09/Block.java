@@ -3,11 +3,9 @@ package org.example.puzzledays.day09;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block implements Comparable<Block> {
+public class Block {
     private final int capacity;
     private final int startIndex;
-    private boolean isDefragged = false;
-    private boolean isBeingDefragmented = false;
     private List<Integer> content = new ArrayList<>();
 
     public Block(int startIndex, int capacity, List<Integer> content) {
@@ -32,22 +30,6 @@ public class Block implements Comparable<Block> {
         Integer lastItem = content.get(content.size() - 1);
         content.remove(content.size() - 1);
         return lastItem;
-    }
-
-    public void setDefragged() {
-        isDefragged = true;
-    }
-
-    public boolean isDefragged() {
-        return isDefragged;
-    }
-
-    public void setBeingDefragmented() {
-        isBeingDefragmented = true;
-    }
-
-    public boolean isBeingDefragmented() {
-        return isBeingDefragmented;
     }
 
     public boolean isEmpty() {
@@ -78,12 +60,11 @@ public class Block implements Comparable<Block> {
     }
 
     @Override
-    public int compareTo(Block o) {
-        return o.startIndex - this.startIndex;
+    public String toString() {
+        return "[index " + startIndex + ", capacity " + capacity + ", content " + content + "]";
     }
 
-    @Override
-    public String toString() {
-        return "[index " + startIndex + ", capacity " + capacity + ", content " + content + ", defragged " + isDefragged + "]";
+    public boolean equals(Block other) {
+        return this.startIndex == other.startIndex;
     }
 }

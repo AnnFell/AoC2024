@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Day09 {
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<String> input = FileScanner.getPuzzleInput(9, true);
+        ArrayList<String> input = FileScanner.getPuzzleInput(9, false);
         Day09 puzzle = new Day09();
         puzzle.partOne(List.of(input.get(0).split("")));
         partTwo(input);
@@ -40,7 +40,7 @@ public class Day09 {
             if (i == input.size()) break;
         }
 
-        defrag(memory);
+        fragment(memory);
 
         long answer = memory.stream()
                 .filter(b -> !b.isEmpty())
@@ -56,43 +56,25 @@ public class Day09 {
         System.out.println("Answer to part two: " + answer);
     }
 
-    private void defrag(List<Block> memory) {
-        List<Block> reverseMemory = new ArrayList<>(memory);
-        Collections.sort(reverseMemory);
+    private void fragment(List<Block> memory) {
+        for (int i = 0; i < memory.size(); i++) {
+            Block block = memory.get(i);
 
-        for (Block block : memory) {
-            if (block.isDefragged()) {
-                System.out.println("Defrag complete");
-                return;
-            }
-            block.setBeingDefragmented();
             if (block.isEmpty()) {
-                // get last digit and add it
-                // until block is full
                 while (block.hasFreeSpace()) {
-                    Integer lastDigit = getLastDigitInFileSystem(reverseMemory);
-                    if (lastDigit == null) break;
+                    Block lastBlock = memory.get(memory.size() - 1);
+                    if (lastBlock.equals(block)) {
+                        // We're done!
+                        return;
+                    }
+                    if (lastBlock.isEmpty()) {
+                        memory.remove(lastBlock);
+                        continue;
+                    }
+                    Integer lastDigit = lastBlock.takeLastItem();
                     block.add(lastDigit);
                 }
             }
-            block.setDefragged();
         }
-    }
-
-    private Integer getLastDigitInFileSystem(List<Block> reverseMemory) {
-        // Get the first block of the reverse list
-        // // if reverse memory block is empty, remove it and try next one.
-        // // // if being defragmented: we are done, return null
-        // // // otherwise, take off last item
-        Block reverseBlock = reverseMemory.get(0);
-
-        while (reverseBlock.isEmpty()) {
-            reverseBlock.setDefragged();
-            reverseMemory.remove(0);
-            reverseBlock = reverseMemory.get(0);
-
-        }
-        if (reverseBlock.isBeingDefragmented()) return null;
-        return reverseBlock.takeLastItem();
     }
 }
