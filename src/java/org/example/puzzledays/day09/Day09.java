@@ -33,17 +33,15 @@ public class Day09 {
                     memory.add(new Block(index, digit, null));
                 }
             }
-            index += digit == 0 ? 1 : digit;
+            index += digit;
         }
 
         fragment(memory);
-
         long answer = memory.stream()
                 .filter(b -> !b.isEmpty())
                 .mapToLong(Block::getChecksumOfBlock)
                 .sum();
 
-        // 6428525615898 too high
         System.out.println("Answer to part one: " + answer);
     }
 
