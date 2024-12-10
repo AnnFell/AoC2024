@@ -36,6 +36,10 @@ assembly, binary end hex over the past weeks for my studies paid off.
 Part 1: Another "why does it work on the test input but not on the puzzle". ~~Out of time for today, maybe tonight.~~
 Couldn't leave it alone and a properly unit tested until function saves (half) the puzzle day. Part 2: done I guess
 
-**Day 9**
+**Day 9 - solved**
 Part 1: I thought I had a pretty nice and fast solution. But no luck, test input is correct, but no star. Getting into
-the real timecrunch here! Must be nice solving each day in an hour or two max
+the real timecrunch here! Must be nice solving each day in an hour or two max. A day later: simplified it a lot and
+fresh eyes helped. Part 2 was easy with the way I set it up in part 1, at least.
+
+**Day 10**
+Skipped for now

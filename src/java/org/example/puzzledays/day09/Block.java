@@ -23,13 +23,24 @@ public class Block {
         this.content.add(item);
     }
 
+    public void addAll(List<Integer> items) {
+        if (content.size() + items.size() > capacity) {
+            throw new RuntimeException("Will exceed space available in block " + startIndex);
+        }
+        this.content.addAll(items);
+    }
+
     public Integer takeLastItem() {
         if (content.isEmpty()) {
             throw new RuntimeException("Block is empty");
         }
-        Integer lastItem = content.get(content.size() - 1);
-        content.remove(content.size() - 1);
-        return lastItem;
+        return content.remove(content.size() - 1);
+    }
+
+    public List<Integer> takeAllItems() {
+        List<Integer> result = new ArrayList<>(content);
+        content.clear();
+        return result;
     }
 
     public boolean isEmpty() {
@@ -38,6 +49,18 @@ public class Block {
 
     public boolean hasFreeSpace() {
         return capacity - content.size() > 0;
+    }
+
+    public int getFreeSpace() {
+        return capacity - content.size();
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 
     public long getChecksumOfBlock() {
@@ -50,13 +73,8 @@ public class Block {
             long calc = index * integer;
             result += calc;
             index++;
-//            System.out.println(index + " * " + content.get(i) + " = " + calc);
         }
         return result;
-    }
-
-    public String getContentAsString() {
-        return content.toString();
     }
 
     @Override
@@ -64,7 +82,4 @@ public class Block {
         return "[index " + startIndex + ", capacity " + capacity + ", content " + content + "]";
     }
 
-    public boolean equals(Block other) {
-        return this.startIndex == other.startIndex;
-    }
 }

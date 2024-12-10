@@ -9,11 +9,12 @@ public class Day09 {
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(9, false);
         Day09 puzzle = new Day09();
-        puzzle.partOne(List.of(input.get(0).split("")));
-        partTwo(input);
+        List<String> splitInput = List.of(input.get(0).split(""));
+        puzzle.solve(splitInput, false);
+        puzzle.solve(splitInput, true);
     }
 
-    private void partOne(List<String> input) {
+    private void solve(List<String> input, boolean doCompact) {
         int index = 0;
         int fillerDigit = 0;
         List<Block> memory = new ArrayList<>();
@@ -35,19 +36,22 @@ public class Day09 {
             }
             index += digit;
         }
+        if (doCompact) {
+            compact(memory);
+        } else {
+            fragment(memory);
+        }
 
-        fragment(memory);
         long answer = memory.stream()
                 .filter(b -> !b.isEmpty())
                 .mapToLong(Block::getChecksumOfBlock)
                 .sum();
 
-        System.out.println("Answer to part one: " + answer);
-    }
-
-    private static void partTwo(List<String> input) {
-        long answer = 0;
-        System.out.println("Answer to part two: " + answer);
+        if (doCompact) {
+            System.out.println("Answer to part two: " + answer);
+        } else {
+            System.out.println("Answer to part one: " + answer);
+        }
     }
 
     private void fragment(List<Block> memory) {
@@ -57,10 +61,6 @@ public class Day09 {
             if (block.isEmpty()) {
                 while (block.hasFreeSpace()) {
                     Block lastBlock = memory.get(memory.size() - 1);
-                    if (lastBlock.equals(block)) {
-                        // We're done!
-                        return;
-                    }
                     if (lastBlock.isEmpty()) {
                         memory.remove(lastBlock);
                         continue;
@@ -70,5 +70,23 @@ public class Day09 {
                 }
             }
         }
+    }
+
+    private void compact(List<Block> memory) {
+        for (int i = memory.size() - 1; i > 0; i--) {
+            Block blockToMove = memory.get(i);
+            if (blockToMove.isEmpty()) continue;
+
+            int size = blockToMove.getCapacity();
+
+            for (Block block : memory) {
+                if (block.getStartIndex() >= blockToMove.getStartIndex()) break;
+                if (block.getFreeSpace() >= size) {
+                    block.addAll(blockToMove.takeAllItems());
+                    break;
+                }
+            }
+        }
+
     }
 }
