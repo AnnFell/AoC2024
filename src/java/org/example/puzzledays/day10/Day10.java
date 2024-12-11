@@ -22,11 +22,11 @@ public class Day10 {
         // // steps are exactly 1
         // // movement only up, down, left, right (no diagonal)
 
-        partOne(input);
-        partTwo(input);
+        partOne();
+        partTwo();
     }
 
-    private static void partOne(List<String> input) {
+    private static void partOne() {
         Map<Integer, Set<Integer>> trails = new HashMap<>();
 
         for (int i = 0; i < map.size(); i++) {
@@ -42,6 +42,25 @@ public class Day10 {
         long answer = trails.values().stream().mapToLong(Set::size).sum();
         System.out.println("Answer to part one: " + answer);
     }
+
+
+    private static void partTwo() {
+        Map<Integer, Integer> trails = new HashMap<>();
+
+        for (int i = 0; i < map.size(); i++) {
+            Integer value = map.get(i);
+
+            if (value == 0) { // if trailhead,
+                // add it to map with key = index
+                trails.putIfAbsent(i, 0);
+                followTrailRating(trails, i, i, 0);
+            }
+        }
+
+        long answer = trails.values().stream().mapToLong(Long::valueOf).sum();
+        System.out.println("Answer to part two: " + answer);
+    }
+
 
     private static void followTrail(Map<Integer, Set<Integer>> trails, int trailhead, int index) {
         Direction[] directions = {Direction.TOP, Direction.BOTTOM, Direction.LEFT, Direction.RIGHT};
@@ -63,9 +82,24 @@ public class Day10 {
         }
     }
 
-    private static void partTwo(List<String> input) {
-        long answer = 0;
-        System.out.println("Answer to part two: " + answer);
+    private static void followTrailRating(Map<Integer, Integer> trails, int trailhead, int index, int split) {
+        Direction[] directions = {Direction.TOP, Direction.BOTTOM, Direction.LEFT, Direction.RIGHT};
+        Integer currentValue = map.get(index);
+
+        for (Direction direction : directions) {
+            try {
+                int nextIndex = MatrixUtils.getNeighbourIndexFromCurrentIndex(index, columns, direction, map.size());
+                Integer nextValue = map.get(nextIndex);
+                if (nextValue == currentValue + 1) {
+                    if (nextValue == 9) {
+                        trails.compute(trailhead, (k, curr) -> curr + 1);
+                    } else {
+                        followTrailRating(trails, trailhead, nextIndex, split + 1);
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
+        }
     }
 
     private static void parseInput(List<String> input) {

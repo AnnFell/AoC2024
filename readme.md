@@ -41,6 +41,6 @@ Part 1: I thought I had a pretty nice and fast solution. But no luck, test input
 the real timecrunch here! Must be nice solving each day in an hour or two max. A day later: simplified it a lot and
 fresh eyes helped. Part 2 was easy with the way I set it up in part 1, at least.
 
-**Day 10**
+**Day 10 - solved**
 Part 1: Was supposed to take a break from AoC today, but read the puzzle and wanted to try it anyway. Did it in half an
-hour, I have previously used recursive search like this so it was easier. Time for bed now.
+hour, I have previously used recursive search like this so it was easier. Time for bed now. Part 2 done!
