@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Day11 {
+    public static long total = 0;
+
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<String> input = FileScanner.getPuzzleInput(11, false);
         List<Long> stones = Arrays.stream(input.get(0).split(" ")).mapToLong(Long::parseLong).boxed().toList();
@@ -25,27 +27,36 @@ public class Day11 {
         List<Long> blinked = new ArrayList<>(stones);
         for (int i = 0; i < 25; i++) {
             blinked = blink(blinked);
-//            System.out.println(blinked);
         }
         long answer = blinked.size();
         System.out.println("Answer to part one: " + answer);
     }
 
     private static void partTwo(List<Long> stones) {
-
-        for (int i = 0; i < 75; i++) {
-//            System.out.println(blinked);
+        for (long stone : stones) {
+            blink75(stone, 0);
         }
-        long answer = 0;
-        System.out.println("Answer to part two: " + answer);
+        System.out.println("Answer to part two: " + total);
     }
 
-    private static List<Long> blink(List<Long> stones) {
+    public static List<Long> blink(List<Long> stones) {
         List<Long> newList = new ArrayList<>();
         for (long stone : stones) {
             newList.addAll(blinkAtStone(stone));
         }
         return newList;
+    }
+
+    public static void blink75(long stone, int iteration) {
+        iteration++;
+        List<Long> newList = blinkAtStone(stone);
+        if (iteration < 75) {
+            for (long newStone : newList) {
+                blink75(newStone, iteration);
+            }
+        } else {
+            total += newList.size();
+        }
     }
 
     private static List<Long> blinkAtStone(long stone) {
