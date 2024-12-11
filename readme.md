@@ -44,3 +44,6 @@ fresh eyes helped. Part 2 was easy with the way I set it up in part 1, at least.
 **Day 10 - solved**
 Part 1: Was supposed to take a break from AoC today, but read the puzzle and wanted to try it anyway. Did it in half an
 hour, I have previously used recursive search like this so it was easier. Time for bed now. Part 2 done!
+
+**Day 11**
+Part 1 is done, now I need to think about how to do it without overfilling the java heap size with stones. 
