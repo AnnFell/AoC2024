@@ -23,7 +23,7 @@ public class Day11 {
 
     private static void partOne(List<Long> stones) {
         List<Long> blinked = new ArrayList<>(stones);
-        for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < 25; i++) {
             blinked = blink(blinked);
 //            System.out.println(blinked);
         }
@@ -32,22 +32,32 @@ public class Day11 {
     }
 
     private static void partTwo(List<Long> stones) {
+
+        for (int i = 0; i < 75; i++) {
+//            System.out.println(blinked);
+        }
         long answer = 0;
         System.out.println("Answer to part two: " + answer);
     }
 
     private static List<Long> blink(List<Long> stones) {
         List<Long> newList = new ArrayList<>();
-        for (int i = 0; i < stones.size(); i++) {
-            if (stones.get(i) == 0) {
-                newList.add(1L);
-            } else if (("" + stones.get(i)).length() % 2 == 0) {
-                String v = "" + stones.get(i);
-                newList.add(Long.parseLong(v.substring(0, v.length() / 2)));
-                newList.add(Long.parseLong(v.substring(v.length() / 2)));
-            } else {
-                newList.add(stones.get(i) * 2024);
-            }
+        for (long stone : stones) {
+            newList.addAll(blinkAtStone(stone));
+        }
+        return newList;
+    }
+
+    private static List<Long> blinkAtStone(long stone) {
+        List<Long> newList = new ArrayList<>();
+        if (stone == 0) {
+            newList.add(1L);
+        } else if (("" + stone).length() % 2 == 0) {
+            String v = "" + stone;
+            newList.add(Long.parseLong(v.substring(0, v.length() / 2)));
+            newList.add(Long.parseLong(v.substring(v.length() / 2)));
+        } else {
+            newList.add(stone * 2024);
         }
         return newList;
     }
