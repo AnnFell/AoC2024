@@ -15,7 +15,7 @@ public class MatrixUtils {
      * @param matrix the 2D matrix from which neighbors are to be retrieved
      * @param <T>    the type of elements stored in the matrix
      * @return a list containing the neighboring elements of the specified position;
-     *         elements that fall outside the matrix bounds will be stored as null
+     * elements that fall outside the matrix bounds will be stored as null
      */
     public static <T> List<T> getAllNeighbours(int x, int y, List<List<T>> matrix) {
         List<T> result = new ArrayList<>(8);
@@ -36,13 +36,13 @@ public class MatrixUtils {
      * Retrieves a neighboring element from a 2D matrix based on a specified direction
      * from a given position. If the neighboring position is out of bounds, it returns null.
      *
-     * @param x                 the x-coordinate (column index) of the element in the matrix
-     * @param y                 the y-coordinate (row index) of the element in the matrix
-     * @param matrix            the 2D matrix from which the neighbor is to be retrieved
+     * @param x         the x-coordinate (column index) of the element in the matrix
+     * @param y         the y-coordinate (row index) of the element in the matrix
+     * @param matrix    the 2D matrix from which the neighbor is to be retrieved
      * @param direction the direction from the specified position to the neighboring element
-     * @param <T>               the type of elements stored in the matrix
+     * @param <T>       the type of elements stored in the matrix
      * @return the neighboring element located in the specified direction from the given position,
-     *         or null if the neighbor is out of the matrix bounds
+     * or null if the neighbor is out of the matrix bounds
      */
     public static <T> T getNeighbour(int x, int y, List<List<T>> matrix, Direction direction) {
         int maxY = matrix.size() - 1;
@@ -172,6 +172,20 @@ public class MatrixUtils {
         if (result < 0) throw new IndexOutOfBoundsException();
         if (result >= arrayLength) throw new IndexOutOfBoundsException();
         return result;
+    }
+
+    public static List<Integer> getDirectNeighboursFromCurrentIndex(int index, int columns, int arrayLength) {
+        List<Integer> nbours = new ArrayList<>();
+        List<Direction> directions = List.of(Direction.TOP, Direction.RIGHT, Direction.BOTTOM, Direction.LEFT);
+        for (Direction direction : directions) {
+            try {
+                int nbour = getNeighbourIndexFromCurrentIndex(index, columns, direction, arrayLength);
+                nbours.add(nbour);
+            } catch (IndexOutOfBoundsException e) {
+                nbours.add(null);
+            }
+        }
+        return nbours;
     }
 
 }

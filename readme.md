@@ -47,3 +47,6 @@ hour, I have previously used recursive search like this so it was easier. Time f
 
 **Day 11**
 Part 1 is done, now I need to think about how to do it without overfilling the java heap size with stones. 
+
+**Day 12**
+Part 1: this seems straightforward, what will part 2 be??
