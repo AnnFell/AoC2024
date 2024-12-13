@@ -14,7 +14,7 @@ public class Day12 {
     static int rows;
 
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<String> input = FileScanner.getPuzzleInput(12, true);
+        ArrayList<String> input = FileScanner.getPuzzleInput(12, false);
         map = input.stream().map(line -> Arrays.asList(line.split(""))).flatMap(Collection::stream).toList();
         rows = input.size();
         columns = input.get(0).length();

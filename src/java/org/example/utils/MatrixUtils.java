@@ -188,4 +188,18 @@ public class MatrixUtils {
         return nbours;
     }
 
+    public static List<Integer> getAllNeighboursFromCurrentIndex(int index, int columns, int arrayLength) {
+        List<Integer> nbours = new ArrayList<>();
+        List<Direction> directions = List.of(Direction.TOP, Direction.TOP_RIGHT, Direction.RIGHT, Direction.BOTTOM_RIGHT, Direction.BOTTOM, Direction.BOTTOM_LEFT, Direction.LEFT, Direction.TOP_LEFT);
+        for (Direction direction : directions) {
+            try {
+                int nbour = getNeighbourIndexFromCurrentIndex(index, columns, direction, arrayLength);
+                nbours.add(nbour);
+            } catch (IndexOutOfBoundsException e) {
+                nbours.add(null);
+            }
+        }
+        return nbours;
+    }
+
 }

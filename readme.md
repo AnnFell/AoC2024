@@ -46,7 +46,9 @@ Part 1: Was supposed to take a break from AoC today, but read the puzzle and wan
 hour, I have previously used recursive search like this so it was easier. Time for bed now. Part 2 done!
 
 **Day 11**
-Part 1 is done, now I need to think about how to do it without overfilling the java heap size with stones. 
+Part 1 is done, now I need to think about how to do it without overfilling the java heap size with stones.
 
-**Day 12**
-Part 1: this seems straightforward, what will part 2 be?? Part 2: yeah...
+**Day 12 - solved**
+Part 1: this seems straightforward, what will part 2 be?? Part 2: yeah... (After a nights sleep:) That was a fun
+challenge. Pencil and paper helped a lot. I learned to take a step back and look at the problem.
+
